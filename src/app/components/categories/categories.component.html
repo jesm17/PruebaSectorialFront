@@ -1,0 +1,175 @@
+<button
+  mat-raised-button
+  class="bg-success ms-2 my-2 text-white"
+  data-bs-toggle="modal"
+  data-bs-target="#addCategory"
+>
+  <mat-icon>add</mat-icon>
+  agregar categoria
+</button>
+
+<div class="container text-center">
+  <div class="row row-cols-2">
+    <div *ngFor="let category of allCategories" class="col my-2">
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">
+            {{ "Nombre de la categoria: " + category.nombre }}
+          </h3>
+          <div>
+            <div>
+              Estado: {{ category.activo == true ? "Activo" : "Desactivo" }}
+            </div>
+            <div>
+              <button
+                (click)="changeStatusCategory(category._id!)"
+                mat-flat-button
+                class="bg-primary text-white me-1 mt-1"
+              >
+                Cambiar estado
+              </button>
+              <button
+                class="btn btn-primary me-1 mt-1"
+                type="button"
+                (click)="addSubCategory(category._id!, category.nombre)"
+                aria-expanded="false"
+                routerLink="/addSubcategories"
+                [disabled]="category.activo == false"
+              >
+                agregar sub categoria
+              </button>
+              <button
+                class="btn btn-danger"
+                [disabled]="
+                  category.subcategorias.length != 0 || category.activo == true
+                "
+                (click)="deleteCategory(category._id!)"
+              >
+                eliminar categoria
+              </button>
+            </div>
+          </div>
+          <div class="row row-cols-1">
+            <span class="my-1" [hidden]="category.subcategorias.length == 0"
+              >Subcategorias</span
+            >
+            <div *ngFor="let sub of category.subcategorias" class="mt-1  col">
+              <button
+                class="btn btn-primary me-1 my-1"
+                type="button"
+                data-bs-toggle="collapse"
+                (click)="abrirSubcategoria(sub._id!)"
+                aria-expanded="false"
+                aria-controls="collapseSubcategory"
+                id="collapseSubcategory{{ sub._id }}"
+              >
+                Subcategoria: {{ sub.nombre }}
+              </button>
+
+              <div class="collapse" id="collapseSubategory{{ sub._id }}">
+                <ul class="list-group">
+                  <li
+                    class="list-group-item d-flex justify-content-between align-items-center"
+                  >
+                    {{ sub.nombre }}
+                  </li>
+
+                  <li
+                    class="list-group-item d-flex justify-content-between align-items-center"
+                  >
+                    Estado: {{ sub.activo == true ? "Activo" : "Desactivo"
+                    }}<button
+                      class="btn btn-primary"
+                      (click)="changeStatusSubCategory(category._id!, sub._id!)"
+                    >
+                      Cambiar Estado
+                    </button>
+                    <button
+                      class="btn btn-danger"
+                      [disabled]="sub.temas.length > 0"
+                      (click)="deleteSubCategory(category._id!, sub._id!)"
+                    >
+                      eliminar subcategoria
+                    </button>
+                  </li>
+                </ul>
+                <span>Temas</span>
+                <ul class="list-group">
+                  <li
+                    *ngFor="let tema of sub.temas"
+                    class="list-group-item d-flex justify-content-between align-items-center"
+                  >
+                    {{ tema.nombre }}
+                    <button
+                      class="bg-danger"
+                      mat-mini-fab
+                      (click)="deleteTheme(category._id!, sub._id!, tema._id!)"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </li>
+                </ul>
+                <button
+                  class="btn btn-success"
+                  [disabled]="sub.activo == false || category.activo == false"
+                  (click)="addTheme(category._id!, sub._id!, sub.nombre)"
+                  routerLink="/addTheme"
+                >
+                  Agregar tema
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal addCategory -->
+<div
+  class="modal fade"
+  id="addCategory"
+  tabindex="-1"
+  aria-labelledby="addCategory"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="addCategory">Agregar categoria</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body w-100">
+        <div class="d-flex justify-content-center">
+          <mat-form-field class="w-75">
+            <mat-label>Nombre</mat-label>
+            <input type="text" matInput [formControl]="categoryName" />
+          </mat-form-field>
+        </div>
+        <div class="d-flex justify-content-center">
+          <mat-form-field class="w-75">
+            <mat-label>Subcategoria</mat-label>
+            <input type="text" matInput [formControl]="subCategoryName" />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+          Cancelar
+        </button>
+        <button
+          class="btn btn-success"
+          (click)="addCategory()"
+          disabled="{{ subCategoryName.errors || categoryName.errors }}"
+        >
+          Agregar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

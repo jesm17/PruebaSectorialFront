@@ -1,0 +1,26 @@
+<a href="/" class="btn bg-primary m-2 text-white"> Volver a categorias </a>
+<div class="container">
+  <div class="d-flex justify-content-center">
+    <p>La Subcategoria donde se agregara el tema es: {{ subCategory }}</p>
+  </div>
+  <div class="d-flex justify-content-center">
+    <p>Inserta los temas de la subcategoria</p>
+  </div>
+  <div class="d-flex justify-content-center">
+    <mat-form-field class="w-25">
+      <mat-label>Temas</mat-label>
+      <textarea matInput [formControl]="temas"></textarea>
+      <mat-hint>Separados por comas(,)</mat-hint>
+    </mat-form-field>
+  </div>
+  <div class="d-flex justify-content-center my-2" >
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="addtTheme()"
+      disabled="{{ temas.invalid }}"
+    >
+      Agregar
+    </button>
+  </div>
+</div>
